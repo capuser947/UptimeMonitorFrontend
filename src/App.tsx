@@ -1,7 +1,7 @@
 import './App.css'
 import { Layout } from './Layout'
 
-function App(children:React.ReactNode) {
+export function App(children:React.ReactNode) {
 
 
   return (
