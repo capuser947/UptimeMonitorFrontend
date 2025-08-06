@@ -1,10 +1,10 @@
 export type ResponseLog = {
   id: string;
-  endpointId: string;
+  projectTeamId: string;
   timeStamp: Date;
   statusCode: string;
   responseTimeMs: number;
   success: boolean;
   errorMessage?: string;
-  endpointUrl?: string;
+  url?: string;
 };

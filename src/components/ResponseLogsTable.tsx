@@ -73,9 +73,9 @@ export const ResponseLogsTable = ({ logs }: ResponseLogsTableProps) => {
                 <TableCell>
                   <div className="flex items-center gap-2 max-w-xs">
                     <span className="truncate font-mono text-sm">
-                      {log.endpointUrl}
+                      {log.url}
                     </span>
-                  <a className="group-hover:visible invisible" href={log.endpointUrl}><ExternalLink className="h-3.5" /></a>
+                  <a className="group-hover:visible invisible" href={log.url}><ExternalLink className="h-3.5" /></a>
                   </div>
                 </TableCell>
                 <TableCell>

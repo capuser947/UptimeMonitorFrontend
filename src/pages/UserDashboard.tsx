@@ -75,7 +75,7 @@ const mockLogs: ResponseLog[] = [
 
 const fetchLogs = async () => {};
 
-const Dashboard = () => {
+const UserDashboard = () => {
   const [logs, setLogs] = useState<ResponseLog[]>(mockLogs);
   const [searchTerm, setSearchTerm] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -167,4 +167,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default UserDashboard;
