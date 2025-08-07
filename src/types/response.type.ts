@@ -1,9 +1,9 @@
 export type ResponseLog = {
   id: string;
   projectTeamId: string;
-  timeStamp: Date;
-  statusCode: string;
-  responseTimeMs: number;
+  updatedAt: Date;
+  statusCode: number;
+  responseTime: number;
   success: boolean;
   errorMessage?: string;
   url?: string;

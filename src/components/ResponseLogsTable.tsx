@@ -1,39 +1,62 @@
 import { Badge } from "../components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../components/ui/table";
 import { CheckCircle, XCircle, Clock, ExternalLink } from "lucide-react";
-import { type ResponseLog } from "../types/responsetypes";
+import { type ResponseLog } from "../types/response.type";
 
 interface ResponseLogsTableProps {
   logs: ResponseLog[];
 }
 
 export const ResponseLogsTable = ({ logs }: ResponseLogsTableProps) => {
-  const formatTimestamp = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
+  console.log("Response timne check", logs);
+  const formatupdatedAt = (date: Date) => {
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
     }).format(date);
   };
 
-  const getStatusBadge = (statusCode: string, success: boolean) => {
-    if (success && statusCode.startsWith('2')) {
-      return <Badge className="bg-success text-success-foreground">Success</Badge>;
-    } else if (statusCode.startsWith('4')) {
-      return <Badge className="bg-warning text-warning-foreground">Client Error</Badge>;
-    } else if (statusCode.startsWith('5')) {
-      return <Badge className="bg-error text-error-foreground">Server Error</Badge>;
+  const getStatusBadge = (statusCode: number, success: boolean) => {
+    if (success && statusCode < 300 && statusCode >= 200) {
+      return (
+        <Badge variant="outline" className="bg-success text-success-foreground">
+          Success
+        </Badge>
+      );
+    } else if (statusCode >= 500) {
+      return (
+        <Badge
+          variant="destructive"
+          className="bg-warning text-warning-foreground"
+        >
+          Client Error
+        </Badge>
+      );
+    } else if (statusCode < 500 && statusCode > 400) {
+      return (
+        <Badge variant="destructive" className="bg-error text-error-foreground">
+          Server Error
+        </Badge>
+      );
     } else {
       return <Badge variant="secondary">{statusCode}</Badge>;
     }
   };
 
-  const getResponseTimeColor = (responseTime: number) => {
+  const getresponseTimeColor = (responseTime: number) => {
     if (responseTime < 200) return "text-success";
     if (responseTime < 500) return "text-warning";
-    
+
     return "text-error";
   };
 
@@ -46,14 +69,17 @@ export const ResponseLogsTable = ({ logs }: ResponseLogsTableProps) => {
             <TableHead>Endpoint</TableHead>
             <TableHead>Response Code</TableHead>
             <TableHead>Response Time</TableHead>
-            <TableHead>Timestamp</TableHead>
+            <TableHead>updatedAt</TableHead>
             <TableHead>Error Message</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {logs.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+              <TableCell
+                colSpan={6}
+                className="text-center py-8 text-muted-foreground"
+              >
                 No logs found
               </TableCell>
             </TableRow>
@@ -75,7 +101,9 @@ export const ResponseLogsTable = ({ logs }: ResponseLogsTableProps) => {
                     <span className="truncate font-mono text-sm">
                       {log.url}
                     </span>
-                  <a className="group-hover:visible invisible" href={log.url}><ExternalLink className="h-3.5" /></a>
+                    <a className="group-hover:visible invisible" href={log.url}>
+                      <ExternalLink className="h-3.5" />
+                    </a>
                   </div>
                 </TableCell>
                 <TableCell>
@@ -86,13 +114,17 @@ export const ResponseLogsTable = ({ logs }: ResponseLogsTableProps) => {
                 <TableCell>
                   <div className="flex items-center gap-1">
                     <Clock className="h-3 w-3 text-muted-foreground" />
-                    <span className={`font-mono ${getResponseTimeColor(log.responseTimeMs)}`}>
-                      {log.responseTimeMs}ms
+                    <span
+                      className={`font-mono ${getresponseTimeColor(
+                        log.responseTime
+                      )}`}
+                    >
+                      {log.responseTime}ms
                     </span>
                   </div>
                 </TableCell>
                 <TableCell className="text-muted-foreground font-mono text-sm">
-                  {formatTimestamp(log.timeStamp)}
+                  {formatupdatedAt(new Date(log.updatedAt))}
                 </TableCell>
                 <TableCell>
                   {log.errorMessage ? (

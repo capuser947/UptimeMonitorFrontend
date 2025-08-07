@@ -19,71 +19,23 @@ import {
 } from "lucide-react";
 import { ResponseLogsTable } from "../components/ResponseLogsTable";
 import { StatsCards } from "../components/StatsCard";
-import type { ResponseLog } from "../types/responsetypes";
+import type { ResponseLog } from "../types/response.type";
+import { baseUrl } from "../lib/api";
 
 // Mock data based on your backend model
 
-const mockLogs: ResponseLog[] = [
-  {
-    id: "1",
-    projectTeamId: "endpoint_1",
-    url: "https://api.example.com/health",
-    timeStamp: new Date("2024-01-15T10:30:00Z"),
-    statusCode: "200",
-    responseTimeMs: 245,
-    success: true,
-  },
-  {
-    id: "2",
-    projectTeamId: "endpoint_2",
-    url: "https://api.example.com/users",
-    timeStamp: new Date("2024-01-15T10:29:30Z"),
-    statusCode: "500",
-    responseTimeMs: 1250,
-    success: false,
-    errorMessage: "Internal Server Error",
-  },
-  {
-    id: "3",
-    projectTeamId: "endpoint_1",
-    url: "https://api.example.com/health",
-    timeStamp: new Date("2024-01-15T10:29:00Z"),
-    statusCode: "200",
-    responseTimeMs: 189,
-    success: true,
-  },
-  {
-    id: "4",
-    projectTeamId: "endpoint_3",
-    url: "https://api.example.com/orders",
-    timeStamp: new Date("2024-01-15T10:28:30Z"),
-    statusCode: "404",
-    responseTimeMs: 456,
-    success: false,
-    errorMessage: "Endpoint not found",
-  },
-  {
-    id: "5",
-    projectTeamId: "endpoint_2",
-    url: "https://api.example.com/users",
-    timeStamp: new Date("2024-01-15T10:28:00Z"),
-    statusCode: "200",
-    responseTimeMs: 312,
-    success: true,
-  },
-];
-
-const fetchLogs = async () => {};
-
 const UserDashboard = () => {
-  const [logs, setLogs] = useState<ResponseLog[]>(mockLogs);
+  const [logs, setLogs] = useState<ResponseLog[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const fetchLogs = async () => {
+    const res = await fetch(`${baseUrl}/api/`);
+  };
 
   const filteredLogs = logs.filter(
     (log) =>
       log.url?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      log.statusCode.includes(searchTerm) ||
+      log.statusCode.toString().includes(searchTerm) ||
       log.errorMessage?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 

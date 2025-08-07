@@ -25,7 +25,7 @@ import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 
 const TabsList = [
-  { title: "Home", url: "/", icon: Home },
+  { title: "Overview", url: "/", icon: Home },
   { title: "Dashboard", url: "/dashboard", icon: Activity },
   { title: "Endpoints", url: "/endpoints", icon: Globe },
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
