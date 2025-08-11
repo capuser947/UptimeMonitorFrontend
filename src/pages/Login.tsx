@@ -12,38 +12,34 @@ import {
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { baseUrl } from "../lib/api";
-import type { User } from "../types/User.type";
+import type { User } from "../types/user.type";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export function Login() {
-  const [user, setUser] = useState<string>();
+  const { userLogin, user } = useAuth();
+  // const [user, setUser] = useState<string>();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const navigate = useNavigate()
+  const { token } = useAuth();
+  const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  console.log("token", token);
+  if (user && token) {
+    navigate("/");
+    return <></>;
+  }
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-        console.log("I am being executed")
-      const result = await fetch(`${baseUrl}/api/member/login`, {
-        method: "POST",
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-        headers: { "Content-Type": "application/json" },
-      });
-      if (!result) {
-        console.log("No data came");
-      }
-      const resData = await result.json();
-      if (!resData) {
-        console.log("No readable data");
-      }
-      console.log("user", resData);
-      setUser(resData);
-      
+      console.log("I am being executed");
+      console.log(email, password);
+
+      await userLogin(email, password);
+      navigate("/");
     } catch {
-        console.log("catch vlock")
+      console.log("catch block");
     }
   };
   return (
@@ -56,7 +52,7 @@ export function Login() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form >
+          <form onSubmit={handleLogin}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
@@ -89,14 +85,14 @@ export function Login() {
                   }}
                 />
               </div>
+              <CardFooter className="flex-col gap-2">
+                <Button type="submit" className="w-full">
+                  Login
+                </Button>
+              </CardFooter>
             </div>
           </form>
         </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button onClick={handleLogin} type="submit" className="w-full">
-            Login
-          </Button>
-        </CardFooter>
       </Card>
     </div>
   );

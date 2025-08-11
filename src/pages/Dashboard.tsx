@@ -21,6 +21,7 @@ import { ResponseLogsTable } from "../components/ResponseLogsTable";
 import { StatsCards } from "../components/StatsCard";
 import type { ResponseLog } from "../types/response.type";
 import { baseUrl } from "../lib/api";
+import { useAuth } from "../context/AuthContext";
 
 // Mock data based on your backend model
 
@@ -28,10 +29,13 @@ const Dashboard = () => {
   const [logs, setLogs] = useState<ResponseLog[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const { token } = useAuth();
 
   const fetchLogs = async () => {
     try {
-      const result = await fetch(`${baseUrl}/api/responseLog`);
+      const result = await fetch(`${baseUrl}/api/responseLog`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       if (!result) {
         console.log("No data came");
       }

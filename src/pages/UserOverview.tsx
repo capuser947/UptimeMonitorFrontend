@@ -6,21 +6,21 @@ import { useNavigate } from "react-router-dom";
 import { baseUrl } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 
-const Overview = () => {
+const UserOverview = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const navigate = useNavigate();
   const { token } = useAuth();
-  const fetchAllProjects = async () => {
-    const res = await fetch(`${baseUrl}/api/Team`, {
+  const fetchProjectsBasedOnUser = async () => {
+    const res = await fetch(`${baseUrl}/api/Team/68933406813ef6e38288e7b1`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const result = await res.json();
-    console.log("all projects", result);
+    console.log("all project", result);
 
     setProjects(result);
   };
   useEffect(() => {
-    fetchAllProjects();
+    fetchProjectsBasedOnUser();
   }, []);
   const handleNavigationToProject = (id: string) => {
     console.log("Id sent to user dashboard ", id);
@@ -51,4 +51,4 @@ const Overview = () => {
   );
 };
 
-export default Overview;
+export default UserOverview;

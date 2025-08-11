@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -21,16 +21,32 @@ import { ResponseLogsTable } from "../components/ResponseLogsTable";
 import { StatsCards } from "../components/StatsCard";
 import type { ResponseLog } from "../types/response.type";
 import { baseUrl } from "../lib/api";
+import { useParams } from "react-router-dom";
+import type { ProjectParams } from "../types/projectparams.type";
+import { useAuth } from "../context/AuthContext";
 
 // Mock data based on your backend model
 
 const UserDashboard = () => {
+  const { id } = useParams<ProjectParams>();
+  console.log("id", id);
   const [logs, setLogs] = useState<ResponseLog[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const fetchLogs = async () => {
-    const res = await fetch(`${baseUrl}/api/`);
+  const { token } = useAuth();
+  const fetchLogsBasedOnProject = async () => {
+    const res = await fetch(`${baseUrl}/api/responseLog/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res) {
+      console.log("NO response from aserver", res);
+    }
+    const result = await res.json();
+    setLogs(result);
   };
+  useEffect(() => {
+    fetchLogsBasedOnProject();
+  }, []);
 
   const filteredLogs = logs.filter(
     (log) =>

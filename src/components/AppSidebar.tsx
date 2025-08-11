@@ -23,9 +23,12 @@ import {
 } from "./ui/sidebar";
 import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const TabsList = [
   { title: "Overview", url: "/", icon: Home },
+  { title: "User Overview", url: "/useroverview", icon: Home },
   { title: "Dashboard", url: "/dashboard", icon: Activity },
   { title: "Endpoints", url: "/endpoints", icon: Globe },
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
@@ -33,7 +36,9 @@ const TabsList = [
 ];
 
 export function AppSidebar() {
+  const navigate = useNavigate();
   const location = useLocation();
+  const { UserLogout } = useAuth();
   const { state, toggleSidebar } = useSidebar();
 
   const isCollapsed = state === "collapsed";
@@ -42,6 +47,12 @@ export function AppSidebar() {
     isActive
       ? "bg-monitoring-success/20 text-monitoring-success font-medium border-r-2 border-monitoring-success"
       : "hover:bg-muted/50";
+
+  const handleLogout = async () => {
+    console.log("hello");
+    await UserLogout();
+    navigate("/login");
+  };
 
   return (
     <Sidebar collapsible="icon">
@@ -87,6 +98,9 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarMenu>
+        <Button onClick={handleLogout}>Logout</Button>
+      </SidebarMenu>
     </Sidebar>
   );
 }
